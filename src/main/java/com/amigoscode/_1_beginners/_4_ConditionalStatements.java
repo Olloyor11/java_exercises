@@ -2,7 +2,7 @@ package com.amigoscode._1_beginners;
 
 /**
  * Exercise: Conditional Statements
- *
+ * <p>
  * Learn how to control the flow of your program using if/else and switch statements.
  * Conditional statements allow your program to make decisions based on conditions.
  */
@@ -14,6 +14,11 @@ public class _4_ConditionalStatements {
         // Declare an int variable called number and assign it a positive value.
 
         int number = 7;
+        if (number > 0) {
+            System.out.println("Positive");
+        } else {
+            System.out.println("Not Positive");
+        }
 
         // TODO: 2 - Add an else clause to the above that prints "Not positive"
         // Change the value of number to a negative value or 0 to test both branches.
@@ -28,6 +33,16 @@ public class _4_ConditionalStatements {
 
         int score = 85;
 
+        if (score >= 90) {
+            System.out.println("Grade: A");
+        } else if (score >= 80) {
+            System.out.println("Grade: B");
+        } else if (score >= 70) {
+            System.out.println("Grade: C");
+        } else {
+            System.out.println("Grade: F");
+        }
+
 
         // TODO: 4 - Write a switch statement for day of the week
         // Declare an int variable called day (1-7).
@@ -36,6 +51,28 @@ public class _4_ConditionalStatements {
         // Include a default case for invalid values.
 
         int day = 3;
+        switch (day) {
+            case 1:
+                System.out.println("Monday");
+                break;
+            case 2:
+                System.out.println("Tuesday");
+                break;
+            case 3:
+                System.out.println("Wednesday");
+                break;
+            case 4:
+                System.out.println("Thursday");
+                break;
+            case 5:
+                System.out.println("Friday");
+                break;
+            case 6:
+                System.out.println("Saturday");
+            case 7:
+                System.out.println("Sunday");
+                break;
+        }
 
 
         // TODO: 5 - Use a switch statement with a String
@@ -44,6 +81,23 @@ public class _4_ConditionalStatements {
         // Handle at least 3-4 months plus a default case.
 
         String month = "February";
+
+        switch (month) {
+            case "January":
+                System.out.println(31);
+                break;
+            case "February":
+                System.out.println(28);
+                break;
+            case "March":
+                System.out.println(31);
+                break;
+            case "April":
+                System.out.println(30);
+                break;
+            default:
+                System.out.println(30);
+        }
 
 
         // TODO: 6 - Use a switch expression (Java 14+) to return a value
@@ -54,6 +108,17 @@ public class _4_ConditionalStatements {
         //       ...
         //   };
         // Print the result.
+        String dayName = switch (day) {
+            case 1 -> "Monday";
+            case 2 -> "Tuesday";
+            case 3 -> "Wednesday";
+            case 4 -> "Thursday";
+            case 5 -> "Friday";
+            case 6 -> "Saturday";
+            case 7 -> "Sunday";
+            default -> "Invalid input";
+        };
+        System.out.println(dayName);
 
 
         // TODO: 7 - Write a nested if statement to check if a number is positive AND even
@@ -64,7 +129,17 @@ public class _4_ConditionalStatements {
         //     Else print "Positive and odd"
         //   Else print "Not positive"
 
+
         int value = 8;
+        if (value > 0){
+            if (value % 2 == 0){
+                System.out.println("Positive and Even");
+            }else {
+            System.out.println("Positive and odd");
+            }
+        }else {
+            System.out.println("Not Positive");
+        }
 
     }
 }
