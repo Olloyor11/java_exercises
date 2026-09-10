@@ -1,8 +1,10 @@
 package com.amigoscode._2_developers._5_methods;
 
+import java.util.Arrays;
+
 /**
  * Variable Arguments (Varargs) Exercises
- *
+ * <p>
  * Practice using the varargs syntax (Type... name) which allows methods to accept
  * zero or more arguments of the same type. Internally, varargs are treated as arrays.
  */
@@ -12,6 +14,15 @@ public class VarArgs {
     //  Returns the sum of all provided numbers.
     //  If no arguments are provided, return 0.
     //  Hint: use a for-each loop to iterate over 'numbers'.
+    public static int sum(int... numbers) {
+        int number = 0;
+
+        for (int num : numbers) {
+            number += num;
+        }
+
+        return number;
+    }
 
 
     // TODO: 2 - Create a method: String concatenate(String... strings)
@@ -19,12 +30,25 @@ public class VarArgs {
     //  Example: concatenate("Hello", "World") returns "Hello World"
     //  If no arguments, return an empty string "".
     //  Hint: use StringBuilder or String.join(" ", strings).
+    public static String concatenate(String... strings) {
+        return String.join(" ", strings);
+    }
 
 
     // TODO: 3 - Create a method: int findMax(int... numbers)
     //  Returns the largest value among the arguments.
     //  If no arguments are provided, throw an IllegalArgumentException
     //  with the message "At least one number required".
+    public static int findMax(int... numbers) {
+        int target = 0;
+        for (int i = 0; i < numbers.length -1; i++) {
+            if (numbers[i] < numbers[i + 1]){
+                target = numbers[i + 1];
+                i++;
+            }
+        }
+        return target;
+    }
 
 
     // TODO: 4 - Create a method: void printAll(Object... items)
@@ -33,6 +57,11 @@ public class VarArgs {
     //    [0] Hello
     //    [1] 42
     //    [2] true
+    public static void printAll(Object... items){
+        for (int i = 0; i < items.length; i++) {
+            System.out.println("[" + i + "] " + items[i]);
+        }
+    }
 
 
     public static void main(String[] args) {
@@ -44,16 +73,24 @@ public class VarArgs {
         //  - sum(5)          -> 5  (one arg)
         //  - sum(1, 2, 3, 4) -> 10 (many args)
         //  Print each result.
+        System.out.println(sum());
+        System.out.println(sum(5));
+        System.out.println(sum(1,2,3,4));
+
+
 
 
         System.out.println("\n=== Concatenate ===");
         // Print: concatenate("Java", "is", "awesome")
+        System.out.println(concatenate("Java", "is", "awesome"));
 
         System.out.println("\n=== Find Max ===");
         // Print: findMax(3, 7, 2, 9, 1)
+        System.out.println(findMax(3,7,2,9,1));
 
         System.out.println("\n=== Print All ===");
         // Call: printAll("Hello", 42, true, 3.14)
+        printAll("Hello",42,true,3.14);
 
         System.out.println("\n=== Mixed Params ===");
         // TODO: 6 - Create a method: String format(String prefix, int... numbers)
@@ -63,5 +100,16 @@ public class VarArgs {
         //  Hint: varargs must be the LAST parameter in the method signature.
         //  Then call the method and print the result here.
 
+        System.out.println("rental yield is: " + rentalYieldCalculator(1300,250_000));
+
+    }
+    public static String format(String prefix, int... numbers ){
+        return prefix + ": " + Arrays.toString(numbers);
+    }
+
+    public static String rentalYieldCalculator(double monthlyRenIn, double propertyPrice){
+        double annualRenIn = monthlyRenIn * 12;
+        double rentalYield = (annualRenIn / propertyPrice) * 100;
+        return String.format("%.2f%%", rentalYield);
     }
 }
