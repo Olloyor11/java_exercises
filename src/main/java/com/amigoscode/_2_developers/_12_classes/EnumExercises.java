@@ -2,18 +2,34 @@ package com.amigoscode._2_developers._12_classes;
 
 /**
  * Enum Exercises
- *
+ * <p>
  * Practice creating and using enums in Java. Enums are special classes that
  * represent a fixed set of constants. They can have fields, constructors,
  * and methods just like regular classes.
  */
 public class EnumExercises {
 
+
     // TODO: 1 - Create an enum called Season with four constants:
     //  SPRING, SUMMER, AUTUMN, WINTER
     //  For now, just declare them without any fields or methods.
+    public enum Season {
+        SPRING("Flowers bloom"),
+        SUMMER("Sun shines"),
+        AUTUMN("Leaves fall"),
+        WINTER("Snow falls");
 
+        private final String description;
 
+        Season(String description) {
+            this.description = description;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+    }
     // TODO: 2 - Modify the Season enum to add:
     //  - A private final String 'description' field
     //  - A constructor that takes a String description and assigns it
@@ -34,6 +50,21 @@ public class EnumExercises {
     //  - A private final int 'level' field
     //  - A constructor that takes an int level
     //  - A getter getLevel()
+    public enum Priority {
+        LOW(1),
+        MEDIUM(2),
+        HIGH(3);
+
+        private final int level;
+
+        Priority(int level) {
+            this.level = level;
+        }
+
+        public int getLevel() {
+            return level;
+        }
+    }
 
 
     public static void main(String[] args) {
@@ -42,6 +73,14 @@ public class EnumExercises {
         //  For each season, print a message like "Spring: Flowers bloom"
         //  using the getDescription() method.
         //  Test with Season.SUMMER.
+        Season season = Season.SUMMER;
+        String message = switch (season) {
+            case SPRING -> "Spring: " + season.getDescription();
+            case SUMMER -> "Summer: " + season.getDescription();
+            case AUTUMN -> "Autumn: " + season.getDescription();
+            case WINTER -> "Winter: " + season.getDescription();
+        };
+        System.out.println(message);
 
 
         System.out.println("\n=== Iterate Over Enum Values ===");
@@ -49,6 +88,23 @@ public class EnumExercises {
         //  Loop through them and print each one with its description and ordinal.
         //  Example output: "0: SPRING - Flowers bloom"
         //  Also iterate over Priority.values() and print each with its level.
+        Season[] values = Season.values();
+        for (Season value : values){
+            System.out.println(value + " - " + value.getDescription());
+        }
+        System.out.println();
+        for (int i = 0; i < values.length; i++) {
+            System.out.println(i + ": " + values[i] + " - " + values[i].getDescription());
+
+        }
+
+        Priority[] priorities = Priority.values();
+        System.out.println();
+        for (int i = 0; i < priorities.length; i++) {
+            System.out.println(i + ": " + priorities[i] + " - " + priorities[i].getLevel());
+
+        }
+
 
     }
 }
