@@ -5,11 +5,11 @@ import java.util.List;
 
 /**
  * Exercise: Polymorphism - Payment Processing
- *
+ * <p>
  * Build a payment processing system using interfaces and polymorphism.
  * Multiple payment methods implement the same interface, allowing
  * the processor to handle any payment type without knowing the details.
- *
+ * <p>
  * Key concepts:
  * - Defining interfaces
  * - Multiple classes implementing the same interface
@@ -24,6 +24,15 @@ import java.util.List;
 //   - A default method: void printReceipt(double amount) that prints:
 //     "Receipt: $<amount> paid via <getPaymentMethod()>"
 //     Default methods provide a body in the interface itself.
+interface Payment {
+    boolean processPayment(double amount);
+
+    String getPaymentMethod();
+
+    default void printReceipt(double amount) {
+        System.out.println("Receipt: " + "$" + amount + " paid via " + getPaymentMethod());
+    }
+}
 
 
 // TODO: 2 - Create a CreditCardPayment class that implements Payment.
@@ -33,7 +42,24 @@ import java.util.List;
 //     "Processing credit card payment of $<amount> with card <cardNumber>"
 //     and return true
 //   - Implement getPaymentMethod() to return "Credit Card"
+class CreditCardPayment implements Payment{
+    private String cardNumber;
 
+    public CreditCardPayment(String cardNumber) {
+        this.cardNumber = cardNumber;
+    }
+
+    @Override
+    public boolean processPayment(double amount) {
+        System.out.println( "Processing credit card payment of $" +amount + " with card " + cardNumber);
+        return true;
+    }
+
+    @Override
+    public String getPaymentMethod() {
+        return "Credit Card";
+    }
+}
 
 // TODO: 3 - Create a PayPalPayment class that implements Payment.
 //   - Add a private field: email (String)
@@ -42,6 +68,24 @@ import java.util.List;
 //     "Processing PayPal payment of $<amount> from <email>"
 //     and return true
 //   - Implement getPaymentMethod() to return "PayPal"
+class PayPalPayment implements Payment{
+    private String email;
+
+    public PayPalPayment(String email) {
+        this.email = email;
+    }
+
+    @Override
+    public boolean processPayment(double amount) {
+        System.out.println("Processing PayPal payment of $" + amount + " from " + email);
+        return true;
+    }
+
+    @Override
+    public String getPaymentMethod() {
+        return "PayPal";
+    }
+}
 
 
 // TODO: 4 - Create a BankTransferPayment class that implements Payment.
@@ -51,6 +95,24 @@ import java.util.List;
 //     "Processing bank transfer of $<amount> from account <bankAccountId>"
 //     and return true
 //   - Implement getPaymentMethod() to return "Bank Transfer"
+class BankTransferPayment implements Payment{
+    private String bankAccountId;
+
+    public BankTransferPayment(String bankAccountId) {
+        this.bankAccountId = bankAccountId;
+    }
+
+    @Override
+    public boolean processPayment(double amount) {
+        System.out.println( "Processing bank transfer of $" + amount + " from account " + bankAccountId);
+        return true;
+    }
+
+    @Override
+    public String getPaymentMethod() {
+        return "Bank Transfer";
+    }
+}
 
 
 // TODO: 5 - Create a PaymentProcessor class with a method:
@@ -58,13 +120,33 @@ import java.util.List;
 //   Iterate over the list and call processPayment(amount) on each.
 //   After each payment, call printReceipt(amount).
 
+class PaymentProcessor{
+
+    void processAllPayment(List<Payment> payments, double amount){
+        for (Payment payment : payments) {
+            payment.processPayment(amount);
+            payment.printReceipt(amount);
+
+        }
+    }
+}
+
 
 class PaymentDemo {
     public static void main(String[] args) {
         // TODO: 6 - Create a List<Payment> containing one of each payment type:
         //   CreditCardPayment, PayPalPayment, BankTransferPayment.
         //   Then create a PaymentProcessor and call processAllPayments().
+        List<Payment> payments = new ArrayList<>();
+        CreditCardPayment creditCardPayment = new CreditCardPayment("8600 2345 5689 0987");
+        PayPalPayment payPalPayment = new PayPalPayment("John@gmail.com");
+        BankTransferPayment bankTransferPayment = new BankTransferPayment("32 2345 2346 4567 7856 24365 4678");
+        payments.add(creditCardPayment);
+        payments.add(payPalPayment);
+        payments.add(bankTransferPayment);
 
+        PaymentProcessor processor = new PaymentProcessor();
+        processor.processAllPayment(payments, 23.45);
 
         // TODO: 7 - Demonstrate runtime polymorphism:
         //   Create a Payment variable and assign different implementations to it.
@@ -75,6 +157,15 @@ class PaymentDemo {
         //     payment.processPayment(100.0);
         //     payment = new PayPalPayment("user@email.com");
         //     payment.processPayment(200.0);
+
+        Payment payment = new CreditCardPayment("2324 4536 3456 8755");
+        payment.processPayment(233.56);
+
+        payment = new PayPalPayment("user@email.com");
+        payment.processPayment(200.0);
+
+        payment = new BankTransferPayment("23 2354 2345 6587 3456 6785 6789");
+        payment.processPayment(45.67);
 
     }
 }
