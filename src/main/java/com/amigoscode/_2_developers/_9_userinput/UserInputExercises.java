@@ -25,6 +25,13 @@ public class UserInputExercises {
         String reader = scan.nextLine();
         return reader;
     }
+    public int sumOfNumbers(int[] numArray){
+        int sum = 0;
+        for (int i = 0; i < numArray.length; i++) {
+            sum += numArray[i];
+        }
+        return sum;
+    }
 
     /**
      * Reads an integer from the user with validation.

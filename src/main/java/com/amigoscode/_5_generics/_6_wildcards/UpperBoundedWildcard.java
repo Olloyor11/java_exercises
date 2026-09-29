@@ -21,12 +21,24 @@ public class UpperBoundedWildcard {
     // TODO: 1 - Create a static method: double sumOfList(List<? extends Number> list)
     //  It should iterate through the list and sum all elements using doubleValue().
     //  Return the total sum.
+    static double sumOfList(List<? extends Number> list){
+        double sum = 0;
+        for (Number number : list) {
+            sum += number.doubleValue();
+        }
+        return sum;
+    }
 
 
     // TODO: 2 - Create a static method:
     //  void copyToNumberList(List<? extends Number> source, List<Number> destination)
     //  It should copy all elements from source into destination.
     //  This works because anything that extends Number IS-A Number.
+    static  void copyToNumberList(List<? extends Number> source, List<Number> destination){
+        for (Number number : source) {
+            destination.add(number);
+        }
+    }
 
 
     public static void main(String[] args) {
@@ -36,6 +48,12 @@ public class UpperBoundedWildcard {
         //  (b) List<Double> with values 1.5, 2.5, 3.5
         //  (c) List<Long> with values 100L, 200L, 300L
         //  Print the sum for each.
+        List<Integer> integers = new ArrayList<>(List.of(1, 2, 3));
+        List<Double> doubleList = new ArrayList<>(List.of(1.1, 2.2, 3.3));
+        List<Long> longs = new ArrayList<>(List.of(100L, 200L, 300L));
+        System.out.println(sumOfList(integers));
+        System.out.println(sumOfList(doubleList));
+        System.out.println(sumOfList(longs));
 
 
         // TODO: 4 - Demonstrate that you CANNOT add to List<? extends Number>.
@@ -47,15 +65,28 @@ public class UpperBoundedWildcard {
         // numbers.add(1.0);     // Why doesn't this compile?
         // Hint: The compiler doesn't know the actual type. The list could be
         // List<Integer>, List<Double>, or any other Number subclass.
-
+//        The compiler doesn't know the element type of a List<?>,
+//        so it can't verify that any value you add is safe. It rejects every add except null
 
         // TODO: 5 - Use copyToNumberList() to copy a List<Integer> into a
         //  List<Number>. Print the destination list to verify it worked.
+        List<Number> numbers = new ArrayList<>();
+        copyToNumberList(integers,numbers);
+        System.out.println(numbers);
 
 
         // TODO: 6 - Add a comment below explaining the PECS principle
         //  (Producer Extends, Consumer Super) as it applies to this exercise.
         //  Why is "extends" appropriate when the list is a PRODUCER (we read from it)?
+/*
+      producer's every element is some subtype of T,
+      so reading them as T is safe. You can't write to it, because the
+      actual list might be a List of a narrower subtype and the compiler
+      can't verify what's safe to add.
+      A consumer its element type is T or a supertype,
+      so writing a T is always safe. Reading only gives Object, because the
+      real element type could be anything above T.
+ */
 
     }
 }
