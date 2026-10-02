@@ -13,30 +13,44 @@ public class ArrayListOperations {
 
         // TODO: 1 - Create an ArrayList of Integers called 'numbers'
         //           Add these 10 numbers: 45, 12, 78, 34, 56, 23, 89, 67, 11, 90
+        List<Integer> numbers = new ArrayList<>(List.of(45, 12, 78, 34, 56, 23, 89, 67, 11, 90));
 
 
         // TODO: 2 - Sort the list in ascending order using Collections.sort()
         //           Print the sorted list
+        Collections.sort(numbers);
+        System.out.println(numbers);
 
 
         // TODO: 3 - Reverse the list using Collections.reverse()
         //           Print the reversed list
+        Collections.reverse(numbers);
+        System.out.println(numbers);
 
 
         // TODO: 4 - Find and print the maximum value using Collections.max()
+        Integer max = Collections.max(numbers);
+        System.out.println(max);
 
 
         // TODO: 5 - Create a subList containing the first 5 elements (indices 0 to 4)
         //           Print the subList
         //           Note: subList returns a view, not a copy
+        List<Integer> subList = numbers.subList(0, 4);
+        System.out.println(subList);
 
 
         // TODO: 6 - Convert the ArrayList to an Integer array using toArray()
         //           Print the array length to verify
+        Integer[] numbersArray = numbers.toArray(Integer[]::new);
+        System.out.println(numbersArray.length);
 
 
         // TODO: 7 - Clear the list using clear() and verify it's empty
         //           Print the size and the result of isEmpty()
+        numbers.clear();
+        System.out.println(numbers.size());
+        System.out.println(numbers.isEmpty());
 
     }
 }

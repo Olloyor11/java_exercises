@@ -14,26 +14,41 @@ public class HashSetExercises {
     public static void main(String[] args) {
 
         // TODO: 1 - Create a HashSet of Strings called 'fruits'
+        Set<String> fruits = new HashSet<>();
 
 
         // TODO: 2 - Add elements: "Apple", "Banana", "Cherry", "Apple", "Date", "Banana"
         //           Print the set after adding all elements
         //           Observe that duplicates are automatically ignored
+        fruits.add( "Apple");
+        fruits.add("Banana");
+        fruits.add("Cherry");
+        fruits.add("Apple");
+        fruits.add("Date");
+        fruits.add("Banana");
+        System.out.println(fruits);
 
 
         // TODO: 3 - Check if "Cherry" exists in the set using contains()
         //           Print the result
+        System.out.println(fruits.contains("Cherry"));
 
 
         // TODO: 4 - Remove "Date" from the set
         //           Print the set after removal
+        fruits.remove("Date");
+        System.out.println(fruits);
 
 
         // TODO: 5 - Get and print the size of the set
+        System.out.println(fruits.size());
 
 
         // TODO: 6 - Iterate over the set using a for-each loop and print each element
         //           Note: the order may not match insertion order (HashSet is unordered)
+        for (String fruit : fruits) {
+            System.out.println(fruit);
+        }
 
 
         // --- Removing Duplicates from a List ---
@@ -46,6 +61,12 @@ public class HashSetExercises {
         // TODO: 7 - Use a HashSet to remove duplicates from 'listWithDuplicates'
         //           Create a new HashSet from the list, then create a new ArrayList from the set
         //           Print the deduplicated list
+        Set<String> stringSet = new HashSet<>();
+        stringSet.addAll(listWithDuplicates);
+        System.out.println(stringSet);
+        List<String> withoutDuplicate = new ArrayList<>();
+        withoutDuplicate.addAll(stringSet);
+        System.out.println(withoutDuplicate);
 
     }
 }

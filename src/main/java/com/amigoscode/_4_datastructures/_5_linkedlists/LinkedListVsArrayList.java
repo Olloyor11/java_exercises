@@ -13,6 +13,13 @@ public class LinkedListVsArrayList {
 
         // TODO: 1 - Create both an ArrayList<Integer> and a LinkedList<Integer>
         //           Fill each with 10000 elements (0 to 9999) using a for loop
+        List<Integer> arrayList = new ArrayList<>();
+        LinkedList<Integer> linkedList = new LinkedList<>();
+
+        for (int i = 0; i <= 9999; i++) {
+            arrayList.add(i);
+            linkedList.add(i);
+        }
 
 
         // TODO: 2 - Measure time to add an element at the beginning (index 0) for both lists
@@ -20,16 +27,56 @@ public class LinkedListVsArrayList {
         //           Perform the add(0, value) operation 1000 times for each list
         //           Print the time taken for each in milliseconds
         //           (divide nanoseconds by 1_000_000 to get milliseconds)
+        long start = System.nanoTime();
+        for (int i = 0; i < 1000; i++) {
+            arrayList.add(0, 1234);
+        }
+        long end = System.nanoTime();
+        System.out.println("ArrayList: " + (end - start) / 1_000_000 + " ms");
 
+        start = System.nanoTime();
+        for (int i = 0; i < 1000; i++) {
+            linkedList.add(0, 1234);
+        }
+        end = System.nanoTime();
+        System.out.println("LinkedList: " + (end - start) / 1_000_000 + " ms");
 
         // TODO: 3 - Measure time to add an element at the end for both lists
         //           Perform the add(value) operation 1000 times for each list
         //           Print the time taken for each
+        long starts = System.nanoTime();
+        for (int i = 0; i < 1000; i++) {
+            arrayList.add(1234);
+        }
+        long ends = System.nanoTime();
+        System.out.println("ArrayList: " + (ends - starts) / 1_000_000 + " ms");
+
+        starts = System.nanoTime();
+        for (int i = 0; i < 1000; i++) {
+            linkedList.add( 1234);
+        }
+        ends = System.nanoTime();
+        System.out.println("LinkedList: " + (ends - starts) / 1_000_000 + " ms");
 
 
         // TODO: 4 - Measure time to get an element at the middle index for both lists
         //           Perform get(list.size() / 2) operation 1000 times for each list
         //           Print the time taken for each
+
+        long starting = System.nanoTime();
+        for (int i = 0; i < 1000; i++) {
+            arrayList.get(arrayList.size()/2);
+        }
+        long ending = System.nanoTime();
+        System.out.println("ArrayList: " + (ending - starting) / 1_000_000 + " ms");
+
+        starting = System.nanoTime();
+        for (int i = 0; i < 1000; i++) {
+            linkedList.get(linkedList.size()/2);
+        }
+        ending = System.nanoTime();
+        System.out.println("LinkedList: " + (ending - starting) / 1_000_000 + " ms");
+
 
 
         // TODO: 5 - Print a summary explaining the differences
@@ -37,6 +84,14 @@ public class LinkedListVsArrayList {
         //           - Why LinkedList is faster for insertions at the beginning
         //           - Why ArrayList is faster for random access (get by index)
         //           - When you would choose one over the other
+        System.out.println("- Why LinkedList is faster for insertions at the beginning" +
+                "it is because it uses nodes under the hood which means it just points to the first object to add " +
+                "while arraylist uses array under the hood which means it has to move all elements to open the beginning of the array");
+        System.out.println("- Why ArrayList is faster for random access (get by index)" +
+                "it is because it uses index to store an element while linked list does not instead it just store reference to the previous" +
+                "and next node");
+        System.out.println("- When you would choose one over the other" +
+                "I chose arraylist only if I want to access by index and linkedlist for insertion or deletion");
 
     }
 }
