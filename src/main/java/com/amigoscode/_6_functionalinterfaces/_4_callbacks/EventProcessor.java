@@ -22,18 +22,30 @@ public class EventProcessor {
     //  Map<String, List<Consumer<String>>>. Initialize it as a new HashMap.
     //  The key is the event name (e.g., "onClick"), and the value is a list
     //  of listener callbacks registered for that event.
+    Map<String, List<Consumer<String>>> listeners =new HashMap<>();
 
 
     // TODO: 2 - Create a method addListener(String event, Consumer<String> listener)
     //  that adds a listener for the given event. If no listeners exist for the
     //  event yet, create a new ArrayList first, then add the listener.
     //  Hint: Use listeners.computeIfAbsent(event, k -> new ArrayList<>())
+    void addListener(String event, Consumer<String> listener){
+        listeners.computeIfAbsent(event, k -> new ArrayList<>()).add(listener);
+    }
 
 
     // TODO: 3 - Create a method emit(String event, String data) that looks up
     //  all listeners for the given event and calls each one with the data.
     //  If no listeners are registered for the event, print
     //  "No listeners for event: <event>"
+    void emit(String event, String data){
+        List<Consumer<String>> listener = listeners.get(event);
+        if (listener == null){
+            System.out.println("No listeners for event: " + event);
+        }else {
+            listener.forEach(each -> each.accept(data));
+        }
+    }
 
 
     public static void main(String[] args) {
@@ -44,10 +56,14 @@ public class EventProcessor {
         //  a) A listener that prints "Button clicked! Data: <data>"
         //  b) A listener that prints "Logging click event: <data>"
         //  c) A listener that prints "Analytics: tracking click - <data>"
+        processor.addListener("onClick",(listen -> System.out.println("Button clicked! Data: " + listen)));
+        processor.addListener("onClick",(listen -> System.out.println("Logging click event: " + listen)));
+        processor.addListener("onClick",(listen -> System.out.println("Analytics: tracking click " + listen)));
 
 
         // TODO: 5 - Register a listener for the "onHover" event that prints
         //  "Hovering over: <data>"
+        processor.addListener("onHover",(listen -> System.out.println("Hovering over: " + listen)));
 
 
         // TODO: 6 - Emit the following events and observe all listeners being called:
@@ -55,6 +71,11 @@ public class EventProcessor {
         //  b) Emit "onClick" with data "cancel-button"
         //  c) Emit "onHover" with data "menu-item"
         //  d) Emit "onScroll" with data "page-down" (no listeners registered)
+        processor.emit("onClick", "submit-button");
+        processor.emit("onClick", "cancel-button");
+        processor.emit("onHover", "menu-item");
+        processor.emit("onScroll", "page-down");
+
 
     }
 }

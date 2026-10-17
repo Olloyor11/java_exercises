@@ -33,27 +33,43 @@ public class SummaryStatistics {
         // TODO: 1 - Get IntSummaryStatistics from the 'scores' list
         //           Use mapToInt and summaryStatistics()
         //           Store the result in a variable
+        IntSummaryStatistics intSummaryStatistics = scores.stream().mapToInt(Integer::intValue).summaryStatistics();
+
 
 
         // TODO: 2 - Print the count, sum, min, max, and average from the
         //           IntSummaryStatistics obtained in TODO 1
         //           Use getCount(), getSum(), getMin(), getMax(), getAverage()
+        System.out.println("Min: " + intSummaryStatistics.getMin());
+        System.out.println("Max: " + intSummaryStatistics.getMax());
+        System.out.println("Average: " + intSummaryStatistics.getAverage());
+        System.out.println("Count: " + intSummaryStatistics.getCount());
+        System.out.println("Sum: " + intSummaryStatistics.getSum());
 
 
         // TODO: 3 - Use the Collectors.summarizingInt() collector to get
         //           IntSummaryStatistics for unitsSold from 'sales'
         //           Print the result
+        IntSummaryStatistics collect = sales.stream().collect(Collectors.summarizingInt(num -> num.unitsSold));
+        System.out.println(collect);
 
 
         // TODO: 4 - Create DoubleSummaryStatistics for the sale amounts from 'sales'
         //           Use mapToDouble and summaryStatistics()
         //           Print all the statistics
+        DoubleSummaryStatistics doubleSummaryStatistics = sales.stream().mapToDouble(Sale::amount).summaryStatistics();
+        System.out.println(doubleSummaryStatistics);
 
 
         // TODO: 5 - Combine two IntSummaryStatistics:
         //           Create stats for 'batch1' and 'batch2' separately,
         //           then use the combine() method to merge them
         //           Print the combined statistics
+        IntSummaryStatistics intSummaryStatistics1 = batch1.stream().mapToInt(Integer::intValue).summaryStatistics();
+        IntSummaryStatistics intSummaryStatistics2 = batch2.stream().mapToInt(Integer::intValue).summaryStatistics();
+        intSummaryStatistics1.combine(intSummaryStatistics2);
+        System.out.println(intSummaryStatistics1);
+
 
     }
 }

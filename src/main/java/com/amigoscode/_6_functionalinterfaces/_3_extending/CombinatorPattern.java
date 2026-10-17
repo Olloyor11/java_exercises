@@ -1,51 +1,85 @@
 package com.amigoscode._6_functionalinterfaces._3_extending;
 
 import java.util.function.Function;
-
+import static com.amigoscode._6_functionalinterfaces._3_extending.CombinatorPattern.ValidationResult.*;
 /**
  * Exercise: Combinator Pattern
- *
+ * <p>
  * The Combinator Pattern uses functional interfaces to build complex validation
  * logic by combining small, reusable validation functions. Each validator is a
  * function that takes an object and returns a validation result. Validators can
  * be chained using an and() method to create comprehensive validation pipelines.
- *
+ * <p>
  * This pattern is powerful because:
- *   - Each validator is a simple, testable unit
- *   - Validators are composable (combine them freely)
- *   - New validators can be added without modifying existing code
+ * - Each validator is a simple, testable unit
+ * - Validators are composable (combine them freely)
+ * - New validators can be added without modifying existing code
  */
 public class CombinatorPattern {
 
     // TODO: 1 - Create a ValidationResult enum with values:
     //  SUCCESS, EMAIL_NOT_VALID, NOT_ADULT, NAME_EMPTY
+    enum ValidationResult {
+        SUCCESS,
+        EMAIL_NOT_VALID,
+        NOT_ADULT,
+        NAME_EMPTY
+    }
 
 
     // TODO: 2 - Create a Customer record (or class) with three fields:
     //  String name, String email, int age
     //  Hint for record: record Customer(String name, String email, int age) {}
+    record Customer(
+            String name,
+            String email,
+            int age
+    ) {
+    }
 
 
     // TODO: 3 - Create a @FunctionalInterface called CustomerValidator that
     //  extends Function<Customer, ValidationResult>.
     //  Add three static methods that return CustomerValidator:
-    //
-    //  a) isEmailValid() - returns SUCCESS if email contains "@",
-    //     otherwise EMAIL_NOT_VALID
-    //
-    //  b) isAdult() - returns SUCCESS if age >= 18,
-    //     otherwise NOT_ADULT
-    //
-    //  c) isNameNotEmpty() - returns SUCCESS if name is not null and not blank,
-    //     otherwise NAME_EMPTY
-    //
-    //  Hint:
-    //  static CustomerValidator isEmailValid() {
-    //      return customer -> customer.email().contains("@")
-    //          ? ValidationResult.SUCCESS
-    //          : ValidationResult.EMAIL_NOT_VALID;
-    //  }
+    @FunctionalInterface
+    interface CustomerValidator extends Function<Customer, ValidationResult> {
 
+
+        //
+        //  a) isEmailValid() - returns SUCCESS if email contains "@",
+        //     otherwise EMAIL_NOT_VALID
+        static CustomerValidator isEmailValid(){
+            return person -> person.email.contains("@") ?
+                    SUCCESS : EMAIL_NOT_VALID;
+        }
+        //
+        //  b) isAdult() - returns SUCCESS if age >= 18,
+        //     otherwise NOT_ADULT
+        static CustomerValidator isAdult(){
+            return person -> person.age >= 18 ?
+                    SUCCESS : NOT_ADULT;
+        }
+        //
+        //  c) isNameNotEmpty() - returns SUCCESS if name is not null and not blank,
+        //     otherwise NAME_EMPTY
+        static CustomerValidator isNameNotEmpty(){
+            return person -> person.name != null && !person.name.isBlank() ?
+                    SUCCESS : NAME_EMPTY;
+        }
+        //
+        //  Hint:
+        //  static CustomerValidator isEmailValid() {
+        //      return customer -> customer.email().contains("@")
+        //          ? ValidationResult.SUCCESS
+        //          : ValidationResult.EMAIL_NOT_VALID;
+        //  }
+        default CustomerValidator and(CustomerValidator other){
+            return customer -> {
+                ValidationResult result = this.apply(customer);
+                return result != SUCCESS ? result : other.apply(customer);
+            };
+        }
+    }
 
     // TODO: 4 - Inside CustomerValidator, add a default method:
     //    default CustomerValidator and(CustomerValidator other)
@@ -65,17 +99,29 @@ public class CombinatorPattern {
         //  CustomerValidator fullValidator = CustomerValidator.isEmailValid()
         //      .and(CustomerValidator.isAdult())
         //      .and(CustomerValidator.isNameNotEmpty());
+        CustomerValidator fullValidator = CustomerValidator.isEmailValid()
+                .and(CustomerValidator.isAdult())
+                .and(CustomerValidator.isNameNotEmpty());
 
 
         // TODO: 6 - Create a valid customer ("Alice", "alice@example.com", 25)
         //  and validate using fullValidator. Print the result.
         //  Expected: SUCCESS
+        Customer customer = new Customer("Alice", "alice@example.com", 25);
+        System.out.println(fullValidator.apply(customer));
 
 
         // TODO: 7 - Create and validate these invalid customers, printing each result:
         //  a) ("Bob", "bob-no-email", 30)    -> Expected: EMAIL_NOT_VALID
         //  b) ("", "young@email.com", 16)    -> Expected: NOT_ADULT
         //  c) ("", "valid@email.com", 25)    -> Expected: NAME_EMPTY
+        Customer customer1 = new Customer("Bob", "bob-no-email", 30);
+        Customer customer2 = new Customer("", "young@email.com", 16);
+        Customer customer3 = new Customer("", "valid@email.com", 25);
+
+        System.out.println(fullValidator.apply(customer1));
+        System.out.println(fullValidator.apply(customer2));
+        System.out.println(fullValidator.apply(customer3));
 
     }
 }

@@ -2,6 +2,7 @@ package com.amigoscode._6_functionalinterfaces._2_functionalinterfaces;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -25,23 +26,33 @@ public class BiFunctionExercise {
         // TODO: 1 - Create a BiFunction<String, String, String> called 'combiner'
         //  that concatenates two strings with a space in between.
         //  Example: ("John", "Doe") -> "John Doe"
+        BiFunction<String, String, String> combiner = (a,b) -> String.join(" ", a, b);
+        System.out.println(combiner.apply("John", "Doe"));
+
 
 
         // TODO: 2 - Create a BiFunction<Integer, Integer, Integer> called 'max'
         //  that returns the larger of two integers.
         //  Hint: You can use Math.max or a ternary expression.
+        BiFunction<Integer,Integer, Integer> max = Math::max;
+
 
 
         // TODO: 3 - Create a BiFunction<String, Integer, String> called 'repeat'
         //  that repeats a string N times.
         //  Example: ("Ha", 3) -> "HaHaHa"
         //  Hint: Use String.repeat(int) or a loop inside the lambda.
+        BiFunction<String,Integer,String> repeat = String::repeat;
+        System.out.println(repeat.apply("ha", 3));
+
 
 
         // TODO: 4 - Use andThen() to chain 'combiner' with a Function<String, Integer>
         //  that returns the length of the combined string.
         //  Apply it to ("Hello", "World") and print the result.
         //  Expected: 11 (length of "Hello World")
+        Function<String,Integer> combine = String::length;
+        System.out.println(combiner.andThen(combine).apply("Hello", "World"));
 
 
         List<String> firstNames = Arrays.asList("Alice", "Bob", "Charlie");
@@ -54,6 +65,17 @@ public class BiFunctionExercise {
         //  Hint: IntStream.range(0, firstNames.size())
         //          .mapToObj(i -> describe.apply(firstNames.get(i), ages.get(i)))
         //          .collect(Collectors.toList())
+        BiFunction<String, Integer, String> describe = (name, age) -> {
+
+            return name + " is " + age + " years old!";
+
+        };
+        List<String> list = IntStream.range(0, firstNames.size())
+                .mapToObj(i -> describe.apply(firstNames.get(i), ages.get(i)))
+                .toList();
+
+        System.out.println(list);
+
 
     }
 }
