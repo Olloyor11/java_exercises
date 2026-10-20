@@ -26,7 +26,34 @@ public class PasswordValidator {
      * @throws IllegalArgumentException if password is null
      */
     public boolean isValid(String password) {
+
+        if (password == null){
+            throw new  IllegalArgumentException("Password can not be null");
+        }
+
+        if (password.length() < 8 ||
+                !password.matches("(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[^A-Za-z0-9]).*")) {
+            return false;
+        }
+//
+//        if (!password.matches(".*[A-Z].*")){
+//            return false;
+//        }
+//
+//        if (!password.matches(".*[a-z].*")){
+//            return false;
+//        }
+//
+//        if (!password.matches(".*\\d.*")){
+//            return false;
+//        }
+//
+//        if (!password.matches(".*[^A-Za-z0-9].*")) {
+//            return false;
+//        }
+
         // TODO: Students implement this after writing tests first (TDD approach)
-        throw new UnsupportedOperationException("Implement me using TDD!");
+        return true;
+//        throw new UnsupportedOperationException("Implement me using TDD!");
     }
 }

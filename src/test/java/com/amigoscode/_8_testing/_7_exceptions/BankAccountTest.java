@@ -26,34 +26,69 @@ class BankAccountTest {
     //  Deposit 50.0 into the account.
     //  Assert that getBalance() returns 150.0.
     //  Use assertThat(account.getBalance()).isEqualTo(150.0);
+    @Test
+    void canDepositIncreaseTheBalance(){
+        account.deposit(50.0);
+        assertThat(account.getBalance()).isEqualTo(150.0);
+    }
 
 
     // TODO: 2 - Test that withdraw decreases the balance.
     //  Withdraw 30.0 from the account.
     //  Assert that getBalance() returns 70.0.
+    @Test
+    void canWithdrawDecreaseTheBalance(){
+        account.withdraw(30.0);
+        assertThat(account.getBalance()).isEqualTo(70.0);
+    }
 
 
     // TODO: 3 - Test that withdrawing more than the balance throws InsufficientFundsException.
     //  Use assertThatThrownBy(() -> account.withdraw(200.0))
     //      .isInstanceOf(InsufficientFundsException.class);
+    @Test
+    void canWithdrawingMoreThanBalanceThrowsInsufficientFundsException(){
+        assertThatThrownBy(() -> account.withdraw(200.0))
+                .isInstanceOf(InsufficientFundsException.class);
+    }
 
 
     // TODO: 4 - Test that depositing a negative amount throws IllegalArgumentException.
     //  Use assertThatThrownBy(() -> account.deposit(-50.0))
     //      .isInstanceOf(IllegalArgumentException.class)
     //      .hasMessageContaining("positive");
+    @Test
+    void canDepositingNegativeNumberThrowsIllegalArgumentException(){
+        assertThatThrownBy(() -> account.deposit(-50.0))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("positive");
+    }
 
 
     // TODO: 5 - Test transfer between two accounts.
     //  Create a second BankAccount ("ACC-002", 50.0).
     //  Transfer 40.0 from account to the second account.
     //  Assert account balance is 60.0 and second account balance is 90.0.
+    @Test
+    void canTestTransferMoney(){
+        BankAccount newAccount = new BankAccount("ACC-002", 50.0);
+       account.transfer(newAccount, 40.0);
+       assertThat(account.getBalance()).isEqualTo(60);
+       assertThat(newAccount.getBalance()).isEqualTo(90);
+
+    }
 
 
     // TODO: 6 - Verify exception message content for insufficient funds.
     //  Use assertThatThrownBy(() -> account.withdraw(500.0))
     //      .hasMessageContaining("Insufficient funds")
     //      .hasMessageContaining("500");
+    @Test
+    void canVerifyExceptionMessage(){
+        assertThatThrownBy(() -> account.withdraw(500.0))
+                .hasMessageContaining("Insufficient funds")
+                .hasMessageContaining("500");
+    }
 
 
     // TODO: 7 - Verify exception type for multiple error scenarios.
@@ -61,5 +96,28 @@ class BankAccountTest {
     //  Test that withdraw(-10) throws IllegalArgumentException.
     //  Test that deposit(0) throws IllegalArgumentException.
     //  Test that transfer to null account throws IllegalArgumentException.
+    @Test
+    void withdrawZeroThrowsIllegalArgumentException(){
+        assertThatThrownBy(() -> account.withdraw(0))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void withdrawNegativeNumberThrowsIllegalArgumentException(){
+        assertThatThrownBy(() -> account.withdraw(-10))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void depositZeroThrowsIllegalArgumentException(){
+        assertThatThrownBy(() -> account.deposit(0))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void transferToNullAccountThrowsIllegalArgumentException(){
+        assertThatThrownBy(() -> account.transfer(null, 59.0))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
 
 }
