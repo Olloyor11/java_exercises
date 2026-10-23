@@ -4,7 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -12,16 +11,17 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 /**
  * Exercise: Building and Testing a Service from Scratch
- *
+ * <p>
  * In this exercise you will define the types and service inline, then write
  * mock-based tests. This simulates the real-world workflow of designing
  * interfaces, services, and tests together.
- *
+ * <p>
  * The Product, ProductRepository, and ProductService are defined as inner
  * types below so everything is self-contained.
  */
@@ -102,6 +102,13 @@ class ProductServiceTest {
     //  Assert that laptop.name() equals "Laptop".
     //  Assert that laptop.price() equals 999.99.
     //  This is a simple sanity check, no mocking needed.
+    @Test
+    void productRecordTest() {
+        Product laptop = new Product("P-1", "Laptop", 999.99);
+        assertThat(laptop.id()).isEqualTo("P-1");
+        assertThat(laptop.name()).isEqualTo("Laptop");
+        assertThat(laptop.price()).isEqualTo(999.99);
+    }
 
 
     // TODO: 2 - Mock ProductRepository and test findById returns a product.
@@ -110,12 +117,28 @@ class ProductServiceTest {
     //  Call productService.findById("P-2").
     //  Assert the returned product's name is "Phone".
     //  Assert the returned product's price is 699.99.
+    @Test
+    void canFindByIdReturnsProduct() {
+        Product phone = new Product("P-2", "Phone", 699.99);
+        when(productRepository.findById("P-2")).thenReturn(Optional.of(phone));
+        Product product = productService.findById("P-2");
+        assertThat(product.name()).isEqualTo("Phone");
+        assertThat(product.price()).isEqualTo(699.99);
+    }
 
 
     // TODO: 3 - Test that findById throws when product is not found.
     //  Stub: when(productRepository.findById("MISSING")).thenReturn(Optional.empty());
     //  Assert that productService.findById("MISSING") throws RuntimeException.
     //  Verify the exception message contains "not found".
+    @Test
+    void canFindByIdThrowExceptionWhenNotFound() {
+        when(productRepository.findById("MISSING")).thenReturn(Optional.empty());
+        assertThatThrownBy(() -> productService.findById("MISSING"))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessageContaining("not found");
+
+    }
 
 
     // TODO: 4 - Test that save calls repository.save().
@@ -123,18 +146,40 @@ class ProductServiceTest {
     //  Call productService.save(product).
     //  Verify: verify(productRepository).save(product);
     //  Also verify: verify(productRepository, times(1)).save(any(Product.class));
+    @Test
+    void canSaveCallsRepositorySave(){
+        Product phone = new Product("P-2", "Phone", 699.99);
+        productService.save(phone);
+        verify(productRepository).save(phone);
+        verify(productRepository, times(1)).save(any(Product.class));
+
+
+    }
 
 
     // TODO: 5 - Test that save with null throws NullPointerException.
     //  Assert that productService.save(null) throws NullPointerException.
     //  Verify that repository.save was never called:
     //  verify(productRepository, never()).save(any());
+    @Test
+    void canSaveWithNullThrowsNullPointerException(){
+        assertThatThrownBy(() -> productService.save(null))
+                .isInstanceOf(NullPointerException.class);
+        verify(productRepository, never()).save(any());
+    }
 
 
     // TODO: 6 - Test that delete throws when product does not exist.
     //  Stub: when(productRepository.existsById("MISSING")).thenReturn(false);
     //  Assert that productService.delete("MISSING") throws RuntimeException.
     //  Verify: verify(productRepository, never()).deleteById(anyString());
+    @Test
+    void canDeleteThrowsWhenProductNoTExist(){
+        when(productRepository.existsById("MISSING")).thenReturn(false);
+        assertThatThrownBy(() -> productService.delete("MISSING"))
+                .isInstanceOf(RuntimeException.class);
+        verify(productRepository, never()).deleteById(anyString());
+    }
 
 
     // TODO: 7 - Test that delete calls repository.deleteById for existing product.
@@ -142,5 +187,12 @@ class ProductServiceTest {
     //  Call productService.delete("P-1").
     //  Verify: verify(productRepository).existsById("P-1");
     //  Verify: verify(productRepository).deleteById("P-1");
+    @Test
+    void canDeleteCallsRepositoryDeleteByIdForExistingProduct(){
+        when(productRepository.existsById("P-1")).thenReturn(true);
+        productService.delete("P-1");
+        verify(productRepository).existsById("P-1");
+        verify(productRepository).deleteById("P-1");
+    }
 
 }

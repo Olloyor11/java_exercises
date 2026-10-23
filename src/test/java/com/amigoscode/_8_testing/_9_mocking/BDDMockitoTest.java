@@ -44,6 +44,15 @@ class BDDMockitoTest {
     //
     //  // Then
     //  assertEquals("COMPLETED", result.getStatus());
+    @Test
+    void mockitoBDD(){
+        Order order = new Order("ORD-1", "CUST-1", 99.99);
+        given(paymentService.charge("CUST-1", 99.99)).willReturn(true);
+        Order result = orderService.placeOrder(order);
+        assertEquals("COMPLETED", result.getStatus());
+        then(paymentService).should().charge("CUST-1", 99.99);
+        then(orderRepository).should().save(any(Order.class));
+    }
 
 
     // TODO: 2 - Use then().should() instead of verify().
@@ -60,6 +69,15 @@ class BDDMockitoTest {
     //
     //  // When & Then
     //  assertThrows(RuntimeException.class, () -> orderService.placeOrder(order));
+    @Test
+    void willThrow(){
+        Order order = new Order("ORD-2", "CUST-2", 50.0);
+        given(paymentService.charge("CUST-2", 50.0))
+                .willThrow(new RuntimeException("Payment gateway down"));
+        assertThrows(RuntimeException.class,
+                () -> orderService.placeOrder(order));
+
+    }
 
 
     // TODO: 4 - Write a complete BDD-style test with clear given/when/then sections.
@@ -75,6 +93,17 @@ class BDDMockitoTest {
     //  then(paymentService).should().charge("CUST-3", 75.0);
     //  then(orderRepository).should().save(order);
     //  then(paymentService).shouldHaveNoMoreInteractions();
+    @Test
+    void completedBDDStyleTest(){
+        Order order = new Order("ORD-3", "CUST-3", 75.0);
+        given(paymentService.charge("CUST-3", 75.0)).willReturn(true);
+        Order placedOrder = orderService.placeOrder(order);
+        assertEquals("COMPLETED", order.getStatus());
+        then(paymentService).should().charge("CUST-3", 75.0);
+        then(orderRepository).should().save(order);
+        then(paymentService).shouldHaveNoMoreInteractions();
+        then(orderRepository).shouldHaveNoMoreInteractions();
+    }
 
 
     // TODO: 5 - Use given() with any() matchers.
@@ -82,6 +111,16 @@ class BDDMockitoTest {
     //  Place two different orders.
     //  Use then(paymentService).should(times(2)).charge(anyString(), anyDouble());
     //  to verify charge was called twice.
+    @Test
+    void withANYMatchers(){
+        given(paymentService.charge(anyString(),anyDouble())).willReturn(true);
+        Order order1 = new Order("ORD-3", "CUST-3", 75.0);
+        Order order2 = new Order("ORD-4", "CUST-4", 175.0);
+        Order placedOrder1 = orderService.placeOrder(order1);
+        Order placedOrder2 = orderService.placeOrder(order2);
+        then(paymentService).should(times(2)).charge(anyString(),anyDouble());
+
+    }
 
 
     // TODO: 6 - Compare BDD vs traditional style (write the same test both ways).
@@ -89,5 +128,20 @@ class BDDMockitoTest {
     //  Then write the SAME test using BDD Mockito (given/willReturn/then...should).
     //  Both should test placing a successful order.
     //  This helps you see the difference in readability.
+    @Test
+    void traditionalStyleTest(){
+        when(paymentService.charge("CUST-3", 75.0)).thenReturn(true);
+        Order order1 = new Order("ORD-3", "CUST-3", 75.0);
+        orderService.placeOrder(order1);
+        verify(paymentService).charge("CUST-3", 75.0);
+    }
+
+    @Test
+    void mockitoBDDStyleTest(){
+        given(paymentService.charge("CUST-3", 75.0)).willReturn(true);
+        Order order1 = new Order("ORD-3", "CUST-3", 75.0);
+        orderService.placeOrder(order1);
+        then(paymentService).should().charge("CUST-3", 75.0);
+    }
 
 }
